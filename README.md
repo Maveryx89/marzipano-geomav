@@ -1,60 +1,70 @@
-# Marzipano
+# Marzipano GEOMAV
 
-A 360° media viewer for the modern web.
+Visor de recorridos virtuales 360° propio de **GEOMAV**, basado en [Marzipano](https://github.com/google/marzipano) (Google, Apache-2.0).
+El objetivo es entregar los tours con la calidad y la experiencia de un export de 3DVista, pero con un visor abierto, liviano y bajo nuestro control.
 
-This is not an official Google product.
+## Qué incluye este repositorio
 
-Check out our website at http://www.marzipano.net/,
-including the [demos](http://www.marzipano.net/demos.html)
-and the [documentation](http://www.marzipano.net/docs.html).
+| Carpeta | Contenido |
+|---|---|
+| `src/`, `demos/`, `test/` | Código original de Marzipano (visor 360 en WebGL). |
+| `tools/import-3dvista.js` | **Importador:** convierte un export de 3DVista en `tour.json` y `tour.js` (escenas, teselas, vista inicial, enlaces entre escenas, textos, enlaces externos y menú). |
+| `template/` | **Plantilla de tour GEOMAV:** interfaz moderna lista para publicar, sin CDN ni dependencias externas. |
 
-Please report bugs using the [issue tracker](https://github.com/google/marzipano/issues). If you have any questions, head over to our [discussion forum](https://groups.google.com/forum/#!forum/marzipano).
+### Funciones de la plantilla
+- Menú lateral de escenas con miniaturas, buscador y botones por sector.
+- Barra de controles: escena anterior/siguiente, giro automático, giroscopio (celular), compartir enlace y pantalla completa.
+- Pantalla de carga con logo y color de marca.
+- Hotspots de navegación animados (sprites) y textos del tour original.
+- Enlace directo a cada escena (`#id-de-escena`).
+- Todo se personaliza en un solo archivo: `config.js`.
 
-### User guide
+> **Importante:** no se usa ni se copia el reproductor de 3DVista. Solo se aprovechan los **datos y medios de nuestros propios tours** (teselas, miniaturas, sprites).
 
-You can include Marzipano in your project in two different ways:
+## Cómo publicar un tour (paso a paso)
 
-* Obtain the `marzipano.js` file from the latest release at
-  http://www.marzipano.net and copy them into your project.
+1. **Compilar el visor** (una sola vez):
+   ```bash
+   npm install
+   npm run build        # genera build/marzipano.min.js
+   ```
+2. **Crear la carpeta del tour** a partir de la plantilla:
+   ```bash
+   cp -r template mi-tour
+   mkdir -p mi-tour/lib && cp build/marzipano.min.js mi-tour/lib/marzipano.js
+   ```
+3. **Copiar los medios:** pega la carpeta `media/` del export de 3DVista dentro de `mi-tour/`.
+4. **Generar los datos del tour** con el importador (si el export trae `locale/es.txt`, también se leen los enlaces y textos):
+   ```bash
+   node tools/import-3dvista.js <carpeta-del-export-3dvista> mi-tour/tour.json
+   ```
+5. **Personalizar** `mi-tour/config.js`: logo, color, textos, campo de visión, giro automático.
+6. **Probar en local** (no sirve abrir el archivo directo, debe ir por http):
+   ```bash
+   npx http-server mi-tour
+   ```
+7. **Subir la carpeta `mi-tour/`** a cualquier hosting estático (por ejemplo, geomav.me).
 
-* Install Marzipano as a dependency using the `npm` package manager and
-  `require` it as a module.
+## Ajustes frecuentes (`config.js`)
 
-### Developer guide
+| Opción | Para qué sirve |
+|---|---|
+| `logo`, `accent`, `background` | Marca: logo, color principal y fondo de la pantalla de carga. |
+| `fov` | Campo de visión **horizontal** inicial (grados). |
+| `autorotate`, `autorotateIdleMs` | Giro automático al iniciar o tras inactividad. |
+| `hotspotRadius` | Tamaño de proyección de los hotspots. |
+| `hotspotRollSign` | Cambiar a `-1` si textos o flechas aparecen girados al revés. |
+| `sceneListOpen` | Menú de escenas abierto al iniciar (escritorio). |
 
-This is an `npm`-based project.
-A [Node.js](http://www.nodejs.org) installation is required for development.
+## Estado del proyecto
 
-Some dependencies expect the Node.js interpreter to be called `node`. However,
-on Debian and Ubuntu systems, the binary installed by the `nodejs` package is
-called `nodejs`. To work around this, install the `nodejs-legacy` package, or
-use [nvm](https://github.com/creationix/nvm) instead.
+- **Fase 1 (base de entrega):** importador 3DVista y plantilla sin CDN. *Lista.*
+- **Fase 2 (interfaz moderna):** menú, controles, carga con marca. *Lista.*
+- **Pendiente:** validar el render con medios reales en GPU (PC y celular), afinar el tamaño y la orientación de hotspots frente al original y acercar el estilo visual al skin de 3DVista.
 
-Run `npm install` to install the dependencies. If you haven't in a while,
-bring them up to date with `npm update`.
+## Licencia
 
-Run `npm run dev` to serve this directory at `http://localhost:8080`.
-While this script is running, the demos are live-reloaded whenever the source
-files are edited.
+Apache-2.0 (ver `LICENSE`). Marzipano es © Google Inc. El código de giroscopio se basa en las demos oficiales de Marzipano.
 
-Run `npm test` to automatically run the browser-based test suite on all
-available browsers in your system.
-
-Run `npm run livetest` to serve the browser-based test suite at `http://localhost:7357`.
-While this script is running, the test suite is live-reloaded whenever the
-source or test files are edited.
-
-### Maintainer guide
-
-Before preparing a release, make sure there are no uncommitted changes and
-verify that the tests pass and all of the demos work correctly.
-
-Update the `CHANGELOG` file and bump the version number in `package.json`.
-Create a new commit containing only the changes to these two files, tag it with
-`git tag vX.Y.Z`, and push it to GitHub with `git push --tags`.
-
-Run `npm run release` to prepare a new release.
-
-Run `npm run deploy` to deploy the release to the website.
-
-Run `npm publish` to publish the release to the npm registry.
+---
+**GEOMAV** · Topografía y tours virtuales 360°
