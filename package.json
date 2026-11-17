@@ -20,7 +20,7 @@
     "release": "scripts/release",
     "deploy": "scripts/deploy",
     "prepublishOnly": "scripts/prepublish",
-    "build": "scripts/build",
+    "build": "bash scripts/build",
     "tour": "node tools/crear-tour.js"
   },
   "dependencies": {
