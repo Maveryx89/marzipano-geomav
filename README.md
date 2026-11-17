@@ -8,6 +8,7 @@ El objetivo es entregar los tours con la calidad y la experiencia de un export d
 | Carpeta | Contenido |
 |---|---|
 | `src/`, `demos/`, `test/` | Código original de Marzipano (visor 360 en WebGL). |
+| `tools/crear-tour.js` | **Armado de carpeta de tour:** une plantilla, visor, medios y datos en un solo paso (`npm run tour`). |
 | `tools/import-3dvista.js` | **Importador:** convierte un export de 3DVista en `tour.json` y `tour.js` (escenas, teselas, vista inicial, enlaces entre escenas, textos, enlaces externos y menú). |
 | `template/` | **Plantilla de tour GEOMAV:** interfaz moderna lista para publicar, sin CDN ni dependencias externas. |
 
@@ -28,22 +29,19 @@ El objetivo es entregar los tours con la calidad y la experiencia de un export d
    npm install
    npm run build        # genera build/marzipano.min.js
    ```
-2. **Crear la carpeta del tour** a partir de la plantilla:
+2. **Armar la carpeta del tour** con un solo comando (copia la plantilla, el visor, la carpeta `media/` y genera `tour.json` y `tour.js` con el importador):
    ```bash
-   cp -r template mi-tour
-   mkdir -p mi-tour/lib && cp build/marzipano.min.js mi-tour/lib/marzipano.js
+   npm run tour -- <carpeta-del-export-3dvista> mi-tour
    ```
-3. **Copiar los medios:** pega la carpeta `media/` del export de 3DVista dentro de `mi-tour/`.
-4. **Generar los datos del tour** con el importador (si el export trae `locale/es.txt`, también se leen los enlaces y textos):
-   ```bash
-   node tools/import-3dvista.js <carpeta-del-export-3dvista> mi-tour/tour.json
-   ```
-5. **Personalizar** `mi-tour/config.js`: logo, color, textos, campo de visión, giro automático.
-6. **Probar en local** (no sirve abrir el archivo directo, debe ir por http):
+   Si el export trae `locale/es.txt`, también se leen los enlaces y textos.
+3. **Personalizar** `mi-tour/config.js`: logo, color, textos, campo de visión, giro automático.
+4. **Probar en local** (no sirve abrir el archivo directo, debe ir por http):
    ```bash
    npx http-server mi-tour
    ```
-7. **Subir la carpeta `mi-tour/`** a cualquier hosting estático (por ejemplo, geomav.me).
+5. **Subir la carpeta `mi-tour/`** a cualquier hosting estático (por ejemplo, geomav.me).
+
+> Los pasos manuales equivalentes: `node tools/import-3dvista.js <export> mi-tour/tour.json`, copiar `template/` y `media/`, y `build/marzipano.min.js` como `lib/marzipano.js`.
 
 ## Ajustes frecuentes (`config.js`)
 
@@ -58,7 +56,7 @@ El objetivo es entregar los tours con la calidad y la experiencia de un export d
 
 ## Estado del proyecto
 
-- **Fase 1 (base de entrega):** importador 3DVista y plantilla sin CDN. *Lista.*
+- **Fase 1 (base de entrega):** importador 3DVista, build (`npm run build`), armado de tour (`npm run tour`) y plantilla sin CDN. *Lista.*
 - **Fase 2 (interfaz moderna):** menú, controles, carga con marca. *Lista.*
 - **Pendiente:** validar el render con medios reales en GPU (PC y celular), afinar el tamaño y la orientación de hotspots frente al original y acercar el estilo visual al skin de 3DVista.
 

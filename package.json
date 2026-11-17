@@ -19,7 +19,9 @@
     "dev": "scripts/dev",
     "release": "scripts/release",
     "deploy": "scripts/deploy",
-    "prepublishOnly": "scripts/prepublish"
+    "prepublishOnly": "scripts/prepublish",
+    "build": "scripts/build",
+    "tour": "node tools/crear-tour.js"
   },
   "dependencies": {
     "bowser": "1.9.4",

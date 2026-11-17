@@ -1,0 +1,9 @@
+#!/bin/bash
+# Compila el visor Marzipano en build/marzipano.js y build/marzipano.min.js (sin CDN, listo para publicar).
+set -e
+cd "$(dirname "$0")/.."
+PATH=scripts:node_modules/.bin:$PATH
+rm -rf build && mkdir -p build
+browserify --noparse=node_modules/**/*.js -s Marzipano -o build/marzipano.js src/index.js
+uglifyjs --compress --mangle -o build/marzipano.min.js build/marzipano.js
+echo "OK: build/marzipano.min.js ($(wc -c < build/marzipano.min.js) bytes)"
