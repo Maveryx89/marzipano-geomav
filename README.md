@@ -1,60 +1,58 @@
-# Marzipano
+# Marzipano GEOMAV
 
-A 360° media viewer for the modern web.
+Visor 360° para la web, basado en [Marzipano](https://github.com/google/marzipano) (Google, licencia Apache-2.0), con mejoras para crear y entregar **tours virtuales 360°** al estilo 3DVista. Proyecto de [GEOMAV](https://geomav.me).
 
-This is not an official Google product.
+> Copia independiente. No es un producto oficial de Google. El proyecto original fue archivado por Google en abril de 2026, por lo que este repositorio se mantiene por separado.
 
-Check out our website at http://www.marzipano.net/,
-including the [demos](http://www.marzipano.net/demos.html)
-and the [documentation](http://www.marzipano.net/docs.html).
+## Qué incluye
 
-Please report bugs using the [issue tracker](https://github.com/google/marzipano/issues). If you have any questions, head over to our [discussion forum](https://groups.google.com/forum/#!forum/marzipano).
+- **`src/`**: librería del visor (escenas, vistas, hotspots, efectos, transiciones).
+- **`demos/`**: ejemplos funcionales. Los más útiles para tours:
+  - `demos/sample-tour/`: tour completo (escenas, hotspots de enlace e información, autorrotación). Es la base para generar tours.
+  - `demos/embedded-hotspots/`, `demos/hotspot-styles/`, `demos/transitions/`: hotspots y transiciones.
+  - `demos/device-orientation/`, `demos/webvr/`: giroscopio y VR.
+- **`test/`**: pruebas automáticas.
 
-### User guide
+## Estructura de un tour
 
-You can include Marzipano in your project in two different ways:
+Un tour es un `data.js` con la lista de escenas, cada una con su vista inicial y sus hotspots:
 
-* Obtain the `marzipano.js` file from the latest release at
-  http://www.marzipano.net and copy them into your project.
+```js
+var data = {
+  "scenes": [{
+    "id": "escena-1",
+    "name": "Escena 1",
+    "levels": [...],              // niveles de resolución de la imagen
+    "faceSize": 1500,
+    "initialViewParameters": { "yaw": 0, "pitch": 0, "fov": 1.5 },
+    "linkHotspots": [...],        // flechas hacia otras escenas
+    "infoHotspots": [...]         // puntos con texto
+  }],
+  "name": "Mi tour",
+  "settings": { "mouseViewMode": "drag", "autorotateEnabled": true }
+};
+```
 
-* Install Marzipano as a dependency using the `npm` package manager and
-  `require` it as a module.
+Ver `demos/sample-tour/data.js` como ejemplo completo.
 
-### Developer guide
+## Uso
 
-This is an `npm`-based project.
-A [Node.js](http://www.nodejs.org) installation is required for development.
+Incluir el visor en un proyecto:
 
-Some dependencies expect the Node.js interpreter to be called `node`. However,
-on Debian and Ubuntu systems, the binary installed by the `nodejs` package is
-called `nodejs`. To work around this, install the `nodejs-legacy` package, or
-use [nvm](https://github.com/creationix/nvm) instead.
+```bash
+npm install
+npm run dev        # sirve demos en http://localhost:8080
+```
 
-Run `npm install` to install the dependencies. If you haven't in a while,
-bring them up to date with `npm update`.
+## Desarrollo
 
-Run `npm run dev` to serve this directory at `http://localhost:8080`.
-While this script is running, the demos are live-reloaded whenever the source
-files are edited.
+Requiere [Node.js](https://nodejs.org/). En Debian/Ubuntu, si el binario se llama `nodejs`, instalar `nodejs-legacy` o usar [nvm](https://github.com/nvm-sh/nvm).
 
-Run `npm test` to automatically run the browser-based test suite on all
-available browsers in your system.
+- `npm install`: instala dependencias.
+- `npm run dev`: servidor local con recarga automática de las demos.
+- `npm test`: ejecuta las pruebas en los navegadores disponibles.
+- `npm run livetest`: pruebas en `http://localhost:7357` con recarga automática.
 
-Run `npm run livetest` to serve the browser-based test suite at `http://localhost:7357`.
-While this script is running, the test suite is live-reloaded whenever the
-source or test files are edited.
+## Créditos y licencia
 
-### Maintainer guide
-
-Before preparing a release, make sure there are no uncommitted changes and
-verify that the tests pass and all of the demos work correctly.
-
-Update the `CHANGELOG` file and bump the version number in `package.json`.
-Create a new commit containing only the changes to these two files, tag it with
-`git tag vX.Y.Z`, and push it to GitHub with `git push --tags`.
-
-Run `npm run release` to prepare a new release.
-
-Run `npm run deploy` to deploy the release to the website.
-
-Run `npm publish` to publish the release to the npm registry.
+Basado en Marzipano, © Google Inc., licenciado bajo [Apache License 2.0](LICENSE). Se conservan los avisos de copyright originales en el código fuente. Las modificaciones de GEOMAV se distribuyen bajo la misma licencia.
